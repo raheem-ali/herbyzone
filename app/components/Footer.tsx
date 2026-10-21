@@ -54,7 +54,7 @@ export default function Footer() {
 
       <div className="f-bottom">
         <div className="pad row">
-          <span>© {new Date().getFullYear()} {SITE.name} Seeds &amp; Plants. All rights reserved.</span>
+          <span>© 2026 {SITE.name} Seeds &amp; Plants. All rights reserved.</span>
           <span className="f-legal">
             <a href="/privacy">Privacy policy</a>
             <a href="/terms">Terms &amp; conditions</a>
