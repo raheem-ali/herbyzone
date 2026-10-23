@@ -1,0 +1,46 @@
+/* Design B: different CARD design per category (everything else is the base page) */
+.kgrid { display: grid; gap: 22px; }
+.kgrid-overlay { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.kgrid-side { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.kgrid-round { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+.kgrid-outline { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+.kc { display: flex; flex-direction: column; background: #fff; }
+.kc h3 { margin: 0; }
+.kc .short { margin: 6px 0 10px; color: #55665a; font-size: 14px; line-height: 1.5; }
+.kc .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.kc-media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #eef3ea; cursor: pointer; overflow: hidden; }
+.kc-media img, .kc-media .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.kc-media:hover img { transform: scale(1.05); }
+
+.kc-overlay { gap: 10px; background: transparent; }
+.kc-overlay .kc-media { aspect-ratio: 4 / 4.2; border-radius: 14px; }
+.kc-overlay .kc-over { position: absolute; inset: auto 0 0 0; padding: 40px 16px 14px; text-align: left; color: #fff; background: linear-gradient(to top, rgba(10,30,15,.88), rgba(10,30,15,0)); }
+.kc-overlay .kc-over h3 { font-size: 20px; color: #fff; }
+.kc-overlay .kc-over p { margin: 4px 0 0; font-size: 13px; color: #e1efe4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+.kc-side { flex-direction: row; border: 1px solid #d9e3d5; border-radius: 12px; overflow: hidden; }
+.kc-side .kc-media { flex: 0 0 40%; min-height: 240px; }
+.kc-side .kc-body { padding: 18px; display: flex; flex-direction: column; justify-content: center; }
+.kc-side h3 { font-size: 20px; }
+.kc-side .points { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13px; }
+.kc-side .points li { display: flex; gap: 6px; align-items: center; }
+
+.kc-round { align-items: center; text-align: center; padding: 22px 16px 18px; border-radius: 22px; }
+.kc-round .kc-media { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,.12); margin-bottom: 14px; }
+.kc-round h3 { font-size: 18px; }
+.kc-round .actions { justify-content: center; margin-top: auto; }
+
+.kc-outline { border: 2px solid #1b1b1b; border-radius: 4px; box-shadow: 6px 6px 0 #239940; }
+.kc-outline .kc-media { aspect-ratio: 16 / 10; border-bottom: 2px solid #1b1b1b; }
+.kc-outline .tag { position: absolute; left: 0; top: 12px; background: #1b1b1b; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; }
+.kc-outline .kc-body { padding: 14px; }
+.kc-outline h3 { font-size: 19px; }
+.kc-outline .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.kc-outline .chips span { font-size: 12px; background: #f1f6ea; border: 1px solid #cfe0bf; border-radius: 999px; padding: 3px 10px; }
+
+@media (max-width: 520px) {
+  .kgrid-side { grid-template-columns: 1fr; }
+  .kc-side { flex-direction: column; }
+  .kc-side .kc-media { flex-basis: auto; aspect-ratio: 16 / 10; min-height: 0; }
+}

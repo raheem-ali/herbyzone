@@ -3,9 +3,19 @@ import { useEffect, useState } from "react";
 import { display, body } from "@/app/fonts";
 import { CATEGORIES, SITE, imgUrl, type Product } from "@/app/data/site";
 import Footer from "@/app/components/Footer";
+import "./categories.css";
 
 const MENU_MAX = 25; // products shown per category in the mega menu
-const PAGE = 10; // cards shown per category before "Show more"
+
+/* ---------- Card styles ----------
+   Same page design for every category; only the CARD design changes per category.
+   Styles are assigned in order and repeat. Pin one to a category with CARD_BY_ID,
+   e.g. { medicinal: "overlay" }. */
+type CardStyle = "classic" | "overlay" | "side" | "round" | "outline";
+const CARD_STYLES: CardStyle[] = ["classic", "overlay", "side", "round", "outline"];
+const CARD_BY_ID: Record<string, CardStyle> = {};
+const FEATURED = 5; // products shown as cards
+const LIST_MAX = 20; // products shown in the list below the cards (no "Show more")
 
 const SLIDES = [
   {
@@ -54,7 +64,6 @@ export default function Home() {
   const [mq, setMq] = useState("");
   const [mob, setMob] = useState(false); // mobile drawer
   const [acc, setAcc] = useState<string | null>(null); // open category in drawer
-  const [shown, setShown] = useState<Record<string, number>>({});
   const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
 
   useEffect(() => {
@@ -110,6 +119,137 @@ export default function Home() {
   };
 
   const go = (d: number) => setSlide((s) => (s + d + SLIDES.length) % SLIDES.length);
+
+  type Cat = (typeof cats)[number];
+
+  const renderCard = (p: Product, c: Cat, v: CardStyle) => {
+    const view = () => setOpen({ p, cat: c.nav });
+    const actions = (
+      <div className="actions">
+        <button className="btn btn-outline" onClick={view}>View details</button>
+        <a className="btn btn-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+      </div>
+    );
+
+    if (v === "overlay")
+      return (
+        <article key={p.id} className="kc kc-overlay">
+          <button className="kc-media" onClick={view} aria-label={`View ${p.name}`}>
+            <Photo p={p} w={560} h={460} />
+            <span className="kc-over">
+              <h3>{p.name}</h3>
+              <p>{p.short}</p>
+            </span>
+          </button>
+          {actions}
+        </article>
+      );
+
+    if (v === "side")
+      return (
+        <article key={p.id} className="kc kc-side">
+          <button className="kc-media" onClick={view} aria-label={`View ${p.name}`}>
+            <Photo p={p} w={400} h={460} />
+          </button>
+          <div className="kc-body">
+            <h3>{p.name}</h3>
+            <p className="short">{p.short}</p>
+            <ul className="points">
+              {p.points.map((pt) => <li key={pt}><Check />{pt}</li>)}
+            </ul>
+            {actions}
+          </div>
+        </article>
+      );
+
+    if (v === "round")
+      return (
+        <article key={p.id} className="kc kc-round" style={{ background: c.tint }}>
+          <button className="kc-media" onClick={view} aria-label={`View ${p.name}`}>
+            <Photo p={p} w={300} h={300} />
+          </button>
+          <h3>{p.name}</h3>
+          <p className="short">{p.short}</p>
+          {actions}
+        </article>
+      );
+
+    if (v === "outline")
+      return (
+        <article key={p.id} className="kc kc-outline">
+          <button className="kc-media" onClick={view} aria-label={`View ${p.name}`}>
+            <Photo p={p} w={520} h={320} />
+            <span className="tag">{c.nav}</span>
+          </button>
+          <div className="kc-body">
+            <h3>{p.name}</h3>
+            <p className="short">{p.short}</p>
+            <div className="chips">{p.points.map((pt) => <span key={pt}>{pt}</span>)}</div>
+            {actions}
+          </div>
+        </article>
+      );
+
+    // classic = your original card
+    return (
+      <article key={p.id} className="card">
+        <button className="card-media" onClick={view} aria-label={`View ${p.name}`}>
+          <Photo p={p} w={520} h={360} />
+          <span className="tag">{c.nav}</span>
+        </button>
+        <div className="card-body">
+          <h3>{p.name}</h3>
+          <p className="short">{p.short}</p>
+          <ul className="points">
+            {p.points.map((pt) => <li key={pt}><Check />{pt}</li>)}
+          </ul>
+          <div className="actions">
+            <button className="btn btn-outline" onClick={view}>View details</button>
+            <a className="btn btn-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+          </div>
+        </div>
+      </article>
+    );
+  };
+
+  const renderCat = (c: Cat, i: number) => {
+    const v = CARD_BY_ID[c.id] ?? CARD_STYLES[i % CARD_STYLES.length];
+    const featured = c.products.slice(0, FEATURED);
+    const rest = c.products.slice(FEATURED, FEATURED + LIST_MAX);
+    return (
+      <section key={c.id} id={c.id} className="cat">
+        <div className="cat-head" style={{ background: `linear-gradient(90deg, ${c.tint}, #fff 85%)` }}>
+          <span className="cat-icon" style={{ background: c.tint }}>{c.icon}</span>
+          <div>
+            <h2>{c.title}</h2>
+            <p>{c.blurb}</p>
+          </div>
+        </div>
+        <div className={v === "classic" ? "grid" : `kgrid kgrid-${v}`}>
+          {featured.map((p) => renderCard(p, c, v))}
+        </div>
+        {rest.length > 0 && (
+          <div className="plist-wrap">
+            <h4 className="plist-title">More {c.title.toLowerCase()} <em>({rest.length})</em></h4>
+            <ol className="plist">
+              {rest.map((p) => (
+                <li key={p.id}>
+                  <button className="pl-img" onClick={() => setOpen({ p, cat: c.nav })} aria-label={`View ${p.name}`}>
+                    <Photo p={p} w={100} h={100} />
+                  </button>
+                  <button className="pl-name" onClick={() => setOpen({ p, cat: c.nav })}>
+                    <b>{p.name}</b>
+                    <small>{p.short}</small>
+                  </button>
+                  <a className="pl-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+                </li>
+              ))}
+            </ol>
+          </div>
+        )}
+      </section>
+    );
+  };
 
   return (
     <div className={`site ${display.variable} ${body.variable}`}>
@@ -303,50 +443,7 @@ export default function Home() {
             <a className="btn btn-primary" href={wa()} target="_blank" rel="noopener noreferrer">Ask an expert</a>
           </div>
 
-          {cats.map((c) => {
-            const limit = shown[c.id] ?? PAGE;
-            const list = term ? c.products : c.products.slice(0, limit);
-            const left = c.products.length - list.length;
-            return (
-              <section key={c.id} id={c.id} className="cat">
-                <div className="cat-head" style={{ background: `linear-gradient(90deg, ${c.tint}, #fff 85%)` }}>
-                  <span className="cat-icon" style={{ background: c.tint }}>{c.icon}</span>
-                  <div>
-                    <h2>{c.title}</h2>
-                    <p>{c.blurb}</p>
-                  </div>
-                </div>
-                <div className="grid">
-                  {list.map((p) => (
-                    <article key={p.id} className="card">
-                      <button className="card-media" onClick={() => setOpen({ p, cat: c.nav })} aria-label={`View ${p.name}`}>
-                        <Photo p={p} w={520} h={360} />
-                        <span className="tag">{c.nav}</span>
-                      </button>
-                      <div className="card-body">
-                        <h3>{p.name}</h3>
-                        <p className="short">{p.short}</p>
-                        <ul className="points">
-                          {p.points.map((pt) => <li key={pt}><Check />{pt}</li>)}
-                        </ul>
-                        <div className="actions">
-                          <button className="btn btn-outline" onClick={() => setOpen({ p, cat: c.nav })}>View details</button>
-                          <a className="btn btn-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-                        </div>
-                      </div>
-                    </article>
-                  ))}
-                </div>
-                {left > 0 && (
-                  <div style={{ textAlign: "center", marginTop: 22 }}>
-                    <button className="btn btn-outline" onClick={() => setShown((m) => ({ ...m, [c.id]: limit + PAGE }))}>
-                      Show more ({left} left)
-                    </button>
-                  </div>
-                )}
-              </section>
-            );
-          })}
+          {cats.map((c, i) => renderCat(c, i))}
           {!cats.length && <p className="empty">No products match “{q}”. Try another name, or <a href={wa()}>ask us on WhatsApp</a>.</p>}
         </div>
 

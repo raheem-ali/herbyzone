@@ -1,0 +1,85 @@
+/* Design A: a different SECTION LAYOUT per category */
+.v-more { margin: 22px 0 0; line-height: 2; font-size: 15px; color: #2b3a2b; }
+.v-more > b { display: block; font-size: 17px; margin-bottom: 4px; color: #1f5d2e; }
+.v-more button { background: none; border: 0; padding: 0; font: inherit; font-weight: 600; color: inherit; cursor: pointer; }
+.v-more button:hover { color: #239940; text-decoration: underline; }
+.v-more .sep { margin: 0 8px; color: #9bb59b; }
+.v-rule { height: 3px; margin: 34px 0 0; background: #1b1b1b; position: relative; border: 0; }
+.v-rule::before, .v-rule::after { content: ""; position: absolute; top: -4px; width: 10px; height: 10px; background: #1b1b1b; transform: rotate(45deg); }
+.v-rule::before { left: 0; } .v-rule::after { right: 0; }
+.pill { display: inline-block; background: #d7261e; color: #fff; font-weight: 700; font-size: 12px; letter-spacing: .04em; text-transform: uppercase; padding: 8px 18px; border-radius: 999px; text-decoration: none; }
+.pill:hover { background: #b81e17; }
+
+/* tiles */
+.cat-tiles .v-head { text-align: center; margin-bottom: 26px; }
+.cat-tiles .v-head h2 { display: inline-block; margin: 0; padding-bottom: 8px; border-bottom: 4px solid #239940; }
+.cat-tiles .v-head p { margin: 10px auto 0; max-width: 560px; color: #55665a; }
+.tiles { display: grid; grid-template-columns: repeat(6, 1fr); gap: 14px; }
+.tile { text-align: center; }
+.tile-media { position: relative; display: block; width: 100%; padding: 0; border: 1px solid #cfd8cf; background: #eef3ea; cursor: pointer; overflow: hidden; aspect-ratio: 1 / 1; }
+.tile-media img, .tile-media .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.tile-media:hover img { transform: scale(1.06); }
+.tile-label { position: absolute; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,.92); padding: 8px 6px; font-weight: 700; font-size: 15px; color: #1b1b1b; }
+.tile .pill { margin-top: 12px; }
+
+/* strip */
+.cat-strip { background: #f3f6ee; padding: 28px 24px 30px; border-radius: 6px; border-left: 8px solid #239940; }
+.cat-strip .v-head { display: flex; align-items: baseline; gap: 16px; flex-wrap: wrap; margin-bottom: 18px; }
+.cat-strip .v-head h2 { margin: 0; }
+.cat-strip .v-head p { margin: 0; color: #55665a; }
+.strip { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.strip-item { flex: 0 0 190px; scroll-snap-align: start; padding: 0 14px; border-right: 2px solid #1b1b1b; }
+.strip-item:first-child { padding-left: 0; }
+.strip-item:last-child { border-right: 0; }
+.strip-img { display: block; width: 100%; padding: 0; border: 2px solid #8a5a2b; background: #fff; cursor: pointer; aspect-ratio: 1 / 1; overflow: hidden; }
+.strip-img img, .strip-img .ph { width: 100%; height: 100%; object-fit: cover; display: block; }
+.strip-row { margin-top: 10px; border-top: 1px solid #1b1b1b; padding-top: 6px; }
+.strip-row small { display: block; color: #b3261e; font-weight: 700; font-size: 13px; }
+.strip-row span { display: block; font-family: Georgia, serif; font-size: 14px; color: #333; margin: 2px 0 8px; min-height: 2.6em; }
+.strip-forms { display: flex; gap: 10px; font-size: 12px; font-family: Georgia, serif; margin-bottom: 8px; }
+.strip-forms i { display: inline-block; width: 9px; height: 9px; background: #1b1b1b; margin-left: 4px; }
+.strip-item .btn { width: 100%; margin-top: 4px; }
+
+/* list */
+.cat-list { border: 2px solid #1b1b1b; padding: 26px; background: #fff; }
+.cat-list .v-head { display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.cat-list .v-head h2 { margin: 0; }
+.cat-list .v-head p { margin: 2px 0 0; color: #55665a; }
+.v-ic { width: 46px; height: 46px; border-radius: 50%; display: grid; place-items: center; font-size: 22px; flex: none; }
+.nlist { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 40px; counter-reset: n; }
+.nlist li { break-inside: avoid; display: flex; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px dashed #b9c6b9; counter-increment: n; }
+.nlist li::before { content: counter(n) "."; font-weight: 700; color: #239940; width: 28px; flex: none; }
+.nlist .nm { flex: 1; text-align: left; background: none; border: 0; padding: 0; font: inherit; font-weight: 600; cursor: pointer; color: #1b1b1b; }
+.nlist .nm:hover { color: #239940; }
+.nlist .nl-wa { font-size: 12px; font-weight: 700; color: #239940; text-decoration: none; border: 1px solid #239940; border-radius: 999px; padding: 4px 10px; }
+.nlist .nl-wa:hover { background: #239940; color: #fff; }
+
+/* spotlight */
+.cat-spot { background: #173d24; color: #fff; padding: 30px; border-radius: 14px; }
+.cat-spot .v-head h2 { margin: 0; color: #fff; }
+.cat-spot .v-head p { margin: 6px 0 22px; color: #bcd7c2; }
+.spot-main { display: grid; grid-template-columns: 1.1fr 1fr; gap: 28px; align-items: center; }
+.spot-img { padding: 0; border: 0; border-radius: 10px; overflow: hidden; cursor: pointer; aspect-ratio: 4 / 3; background: #0f2a18; }
+.spot-img img, .spot-img .ph { width: 100%; height: 100%; object-fit: cover; display: block; }
+.spot-txt h3 { font-size: 28px; margin: 0 0 8px; }
+.spot-txt p { color: #d6e8da; margin: 0 0 14px; line-height: 1.55; }
+.spot-txt .points li { color: #fff; }
+.spot-txt .actions { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 16px; }
+.spot-txt .btn-outline { color: #fff; border-color: #fff; background: transparent; }
+.spot-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 26px; }
+.spot-mini { background: rgba(255,255,255,.08); border: 0; border-radius: 10px; padding: 0; text-align: left; color: #fff; cursor: pointer; overflow: hidden; }
+.spot-mini:hover { background: rgba(255,255,255,.16); }
+.spot-mini img, .spot-mini .ph { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; display: block; }
+.spot-mini b { display: block; padding: 10px 12px 12px; font-size: 14px; }
+.cat-spot .v-more { color: #d6e8da; }
+.cat-spot .v-more > b { color: #fff; }
+.cat-spot .v-more button:hover { color: #9be3ae; }
+
+@media (max-width: 1060px) { .tiles { grid-template-columns: repeat(3, 1fr); } .spot-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 720px) {
+  .tiles { grid-template-columns: repeat(2, 1fr); }
+  .nlist { columns: 1; }
+  .spot-main { grid-template-columns: 1fr; }
+  .cat-spot, .cat-list, .cat-strip { padding: 18px; }
+  .strip-item { flex-basis: 160px; }
+}

@@ -1,0 +1,68 @@
+/* ===== Card style variants + product list (add-on; keeps your existing page design) ===== */
+.kgrid { display: grid; gap: 22px; }
+.kgrid-overlay { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.kgrid-side { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); }
+.kgrid-round { grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 18px; }
+.kgrid-outline { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
+
+.kc { display: flex; flex-direction: column; background: #fff; }
+.kc h3 { margin: 0; }
+.kc .short { margin: 6px 0 10px; color: #55665a; font-size: 14px; line-height: 1.5; }
+.kc .actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.kc-media { position: relative; display: block; width: 100%; padding: 0; border: 0; background: #eef3ea; cursor: pointer; overflow: hidden; }
+.kc-media img, .kc-media .ph { width: 100%; height: 100%; object-fit: cover; display: block; transition: transform .35s; }
+.kc-media:hover img { transform: scale(1.05); }
+
+/* overlay: text sits on the photo */
+.kc-overlay { gap: 10px; background: transparent; }
+.kc-overlay .kc-media { aspect-ratio: 4 / 4.2; border-radius: 14px; }
+.kc-overlay .kc-over { position: absolute; inset: auto 0 0 0; padding: 40px 16px 14px; text-align: left; color: #fff; background: linear-gradient(to top, rgba(10,30,15,.88), rgba(10,30,15,0)); }
+.kc-overlay .kc-over h3 { font-size: 20px; color: #fff; }
+.kc-overlay .kc-over p { margin: 4px 0 0; font-size: 13px; color: #e1efe4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+
+/* side: image left, details right */
+.kc-side { flex-direction: row; border: 1px solid #d9e3d5; border-radius: 12px; overflow: hidden; }
+.kc-side .kc-media { flex: 0 0 40%; min-height: 240px; }
+.kc-side .kc-body { padding: 18px; display: flex; flex-direction: column; justify-content: center; }
+.kc-side h3 { font-size: 20px; }
+.kc-side .points { margin: 0 0 14px; padding: 0; list-style: none; display: grid; gap: 4px; font-size: 13px; }
+.kc-side .points li { display: flex; gap: 6px; align-items: center; }
+
+/* round: centered circle photo on tinted card */
+.kc-round { align-items: center; text-align: center; padding: 22px 16px 18px; border-radius: 22px; }
+.kc-round .kc-media { width: 140px; height: 140px; border-radius: 50%; border: 4px solid #fff; box-shadow: 0 4px 14px rgba(0,0,0,.12); margin-bottom: 14px; }
+.kc-round h3 { font-size: 18px; }
+.kc-round .actions { justify-content: center; margin-top: auto; }
+.kc-round { background-clip: padding-box; }
+
+/* outline: bold border, offset shadow, chips */
+.kc-outline { border: 2px solid #1b1b1b; border-radius: 4px; box-shadow: 6px 6px 0 #239940; }
+.kc-outline .kc-media { aspect-ratio: 16 / 10; border-bottom: 2px solid #1b1b1b; }
+.kc-outline .tag { position: absolute; left: 0; top: 12px; background: #1b1b1b; color: #fff; font-size: 12px; font-weight: 700; padding: 4px 10px; }
+.kc-outline .kc-body { padding: 14px; }
+.kc-outline h3 { font-size: 19px; }
+.kc-outline .chips { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 14px; }
+.kc-outline .chips span { font-size: 12px; background: #f1f6ea; border: 1px solid #cfe0bf; border-radius: 999px; padding: 3px 10px; }
+
+/* product list under the cards */
+.plist-wrap { margin-top: 30px; }
+.plist-title { margin: 0 0 8px; font-size: 18px; color: #1f5d2e; }
+.plist-title em { font-style: normal; color: #78907a; font-weight: 500; font-size: 14px; }
+.plist { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 36px; counter-reset: n; }
+.plist li { break-inside: avoid; display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px dashed #b9c6b9; counter-increment: n; }
+.plist li::before { content: counter(n) "."; width: 24px; flex: none; font-weight: 700; color: #239940; }
+.pl-img { width: 46px; height: 46px; flex: none; border: 0; padding: 0; border-radius: 8px; overflow: hidden; background: #eef3ea; cursor: pointer; }
+.pl-img img, .pl-img .ph { width: 100%; height: 100%; object-fit: cover; display: block; font-size: 0; }
+.pl-name { flex: 1; min-width: 0; text-align: left; background: none; border: 0; padding: 0; cursor: pointer; font: inherit; color: #1b1b1b; }
+.pl-name b { display: block; font-size: 15px; }
+.pl-name small { display: block; color: #6b7d6e; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.pl-name:hover b { color: #239940; }
+.pl-wa { font-size: 12px; font-weight: 700; color: #239940; text-decoration: none; border: 1px solid #239940; border-radius: 999px; padding: 5px 12px; flex: none; }
+.pl-wa:hover { background: #239940; color: #fff; }
+
+@media (max-width: 860px) { .plist { columns: 1; } }
+@media (max-width: 520px) {
+  .kgrid-side { grid-template-columns: 1fr; }
+  .kc-side { flex-direction: column; }
+  .kc-side .kc-media { flex-basis: auto; aspect-ratio: 16 / 10; min-height: 0; }
+}
