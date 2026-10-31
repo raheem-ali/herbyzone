@@ -1,6 +1,7 @@
 // app/data/botanicals.ts  — Herbyzone Botanicals catalogue (no farming content)
 // Product photos: drop files in /public/products/<id>.jpg  (or set `img: "https://..."` on a product).
 // Missing photos fall back to a name placeholder automatically.
+// Each category has 25 products.
 
 export type Product = {
   id: string;
@@ -31,7 +32,7 @@ export const imgUrl = (p: Product, _w?: number, _h?: number) => p.img ?? `/produ
 
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-/* ---------- Herbal Extracts ---------- */
+/* ---------- Herbal Extracts (25) ---------- */
 // [name, local name, botanical name, best seller]
 const EXTRACTS: [string, string, string, boolean?][] = [
   ["Ginseng Extract", "Ginseng Panax", "Panax ginseng", true],
@@ -52,6 +53,13 @@ const EXTRACTS: [string, string, string, boolean?][] = [
   ["Mazu Fruit Extract", "Mazu", "Quercus infectoria"],
   ["Jojoba Extract", "Jojoba", "Simmondsia chinensis"],
   ["Tulsi Leaves Extract", "Tulsi (Holy Basil)", "Ocimum tenuiflorum"],
+  ["Moringa Leaf Extract", "Moringa (Sohanjna)", "Moringa oleifera"],
+  ["Green Tea Extract", "Green Tea", "Camellia sinensis"],
+  ["Licorice Root Extract", "Mulethi", "Glycyrrhiza glabra"],
+  ["Brahmi Extract", "Brahmi", "Bacopa monnieri"],
+  ["Giloy Stem Extract", "Giloy", "Tinospora cordifolia"],
+  ["Shatavari Root Extract", "Shatavari", "Asparagus racemosus"],
+  ["Gotu Kola Extract", "Gotu Kola", "Centella asiatica"],
 ];
 
 const extracts: Product[] = EXTRACTS.map(([name, local, botanical, best]) => ({
@@ -72,7 +80,7 @@ const extracts: Product[] = EXTRACTS.map(([name, local, botanical, best]) => ({
   uses: ["Pharmaceutical", "Nutraceutical", "Food", "Cosmetic"],
 }));
 
-/* ---------- Essential Oils ---------- */
+/* ---------- Essential Oils (25) ---------- */
 const OILS: [string, string, boolean?][] = [
   ["Lavender Oil", "Lavandula angustifolia", true],
   ["Lemongrass Oil", "Cymbopogon citratus"],
@@ -86,6 +94,19 @@ const OILS: [string, string, boolean?][] = [
   ["Sweet Orange Oil", "Citrus sinensis"],
   ["Bergamot Oil", "Citrus bergamia"],
   ["Citronella Oil", "Cymbopogon nardus"],
+  ["Clove Oil", "Syzygium aromaticum"],
+  ["Cedarwood Oil", "Cedrus deodara"],
+  ["Ylang Ylang Oil", "Cananga odorata"],
+  ["Geranium Oil", "Pelargonium graveolens"],
+  ["Patchouli Oil", "Pogostemon cablin"],
+  ["Frankincense Oil", "Boswellia carterii"],
+  ["Thyme Oil", "Thymus vulgaris"],
+  ["Basil Oil", "Ocimum basilicum"],
+  ["Black Seed Oil", "Nigella sativa"],
+  ["Fennel Oil", "Foeniculum vulgare"],
+  ["Grapefruit Oil", "Citrus paradisi"],
+  ["Palmarosa Oil", "Cymbopogon martinii"],
+  ["Cinnamon Oil", "Cinnamomum verum"],
 ];
 
 const oils: Product[] = OILS.map(([name, botanical, best]) => ({
@@ -103,9 +124,12 @@ const oils: Product[] = OILS.map(([name, botanical, best]) => ({
   uses: ["Aromatherapy", "Cosmetic", "Personal care", "Fragrance"],
 }));
 
-/* ---------- Micronutrients ---------- */
+/* ---------- Micronutrients (12 minerals + 13 vitamins = 25) ---------- */
 const MINERALS = ["Zinc", "Iron", "Magnesium", "Calcium", "Copper", "Manganese", "Selenium", "Chromium", "Molybdenum", "Boron", "Iodine", "Cobalt"];
-const VITAMINS = ["Vitamin A", "Vitamin B1", "Vitamin B2", "Vitamin B3", "Vitamin B5", "Vitamin B6", "Vitamin B7 (Biotin)", "Vitamin B9 (Folic Acid)"];
+const VITAMINS = [
+  "Vitamin A", "Vitamin B1", "Vitamin B2", "Vitamin B3", "Vitamin B5", "Vitamin B6",
+  "Vitamin B7 (Biotin)", "Vitamin B9 (Folic Acid)", "Vitamin B12", "Vitamin C", "Vitamin D3", "Vitamin E", "Vitamin K2",
+];
 
 const micro = (name: string, kind: "Mineral" | "Vitamin"): Product => ({
   id: slug(name),
@@ -122,7 +146,7 @@ const micro = (name: string, kind: "Mineral" | "Vitamin"): Product => ({
 
 const micronutrients: Product[] = [...MINERALS.map((n) => micro(n, "Mineral")), ...VITAMINS.map((n) => micro(n, "Vitamin"))];
 
-/* ---------- Herbal Stocks (bulk raw herbs, trading) ---------- */
+/* ---------- Herbal Stocks (bulk raw herbs, trading) (25) ---------- */
 const STOCKS: [string, string, boolean?][] = [
   ["Ashwagandha Root", "Withania somnifera", true],
   ["Amla Fruit (Dried)", "Phyllanthus emblica"],
@@ -138,6 +162,17 @@ const STOCKS: [string, string, boolean?][] = [
   ["Giloy Stem", "Tinospora cordifolia"],
   ["Chamomile Flowers", "Matricaria chamomilla"],
   ["Hibiscus Flowers", "Hibiscus sabdariffa"],
+  ["Fenugreek Seeds", "Trigonella foenum-graecum"],
+  ["Black Seed (Kalonji)", "Nigella sativa"],
+  ["Isabgol Husk", "Plantago ovata"],
+  ["Kalmegh Herb", "Andrographis paniculata"],
+  ["Safed Musli Root", "Chlorophytum borivilianum"],
+  ["Mulberry Leaves", "Morus alba"],
+  ["Stevia Leaves", "Stevia rebaudiana"],
+  ["Marigold Flowers", "Calendula officinalis"],
+  ["Gotu Kola Herb", "Centella asiatica"],
+  ["Fennel Seeds", "Foeniculum vulgare"],
+  ["Cinnamon Bark", "Cinnamomum verum"],
 ];
 
 const stocks: Product[] = STOCKS.map(([name, botanical, best]) => ({

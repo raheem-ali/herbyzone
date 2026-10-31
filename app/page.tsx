@@ -1,43 +1,58 @@
 "use client";
 import { useEffect, useState } from "react";
 import { display, body } from "@/app/fonts";
-import { CATEGORIES, SITE, imgUrl, type Product } from "@/app/data/site";
+import { type Product } from "@/app/data/botanicals";
+import { SITE } from "@/app/data/site";
+import Header, { CATEGORIES } from "@/app/components/Header";
+import Photo from "@/app/components/Photo";
 import Footer from "@/app/components/Footer";
 import "./categories.css";
 
-const MENU_MAX = 25; // products shown per category in the mega menu
+/* ---------- Layout per category ----------
+   cards = products shown as cards (one line on desktop, 2 per row on phone)
+   list  = products shown in the "More" list below the cards                */
+type Layout = { cards: number; list: number; grid?: boolean };
+const LAYOUT: Record<string, Layout> = {
+  "herbal-extracts": { cards: 6, list: 19 }, // 6 + 19 = 25
+  micronutrients: { cards: 5, list: 10, grid: true },
+  "essential-oils": { cards: 6, list: 10 },
+  "herbal-stocks": { cards: 6, list: 20 },
+};
+const DEFAULT_LAYOUT: Layout = { cards: 6, list: 10 };
 
-/* ---------- Card styles ----------
-   Same page design for every category; only the CARD design changes per category.
-   Styles are assigned in order and repeat. Pin one to a category with CARD_BY_ID,
-   e.g. { medicinal: "overlay" }. */
-type CardStyle = "classic" | "overlay" | "side" | "round" | "outline";
-const CARD_STYLES: CardStyle[] = ["classic", "overlay", "side", "round", "outline"];
-const CARD_BY_ID: Record<string, CardStyle> = {};
-const FEATURED = 5; // products shown as cards
-const LIST_MAX = 20; // products shown in the list below the cards (no "Show more")
+/* ---------- Card styles ---------- */
+type CardStyle = "classic" | "overlay" | "side" | "round" | "outline" | "feature";
+const CARD_STYLES: CardStyle[] = ["feature", "overlay", "round", "outline"];
+const CARD_BY_ID: Record<string, CardStyle> = {
+  "herbal-extracts": "feature", // photo + name + description + feature badges
+  micronutrients: "overlay",
+  "essential-oils": "outline",
+  "herbal-stocks": "round",
+};
 
+// TODO: replace with Botanicals banner images
+const BANNER = "https://bmgqwozegxstvizngicd.supabase.co/storage/v1/render/image/public/shop-assets/banners/1771917030093-66xplmk.png?width=800&height=400&quality=65&format=avif&resize=contain";
 const SLIDES = [
   {
-    image: "https://bmgqwozegxstvizngicd.supabase.co/storage/v1/render/image/public/shop-assets/banners/1771917030093-66xplmk.png?width=800&height=400&quality=65&format=avif&resize=contain",
-    title: "Medicinal crop seeds, tested and trusted",
-    sub: "Stevia, ashwagandha, moringa and more for high-value farming.",
-    cta: "Shop medicinal",
-    href: "#medicinal",
+    image: BANNER, // TODO: banner 1
+    title: "Herbal extracts for pharma, nutraceutical and food makers",
+    sub: "Powder and liquid extracts in bulk, with specifications on request.",
+    cta: "Shop extracts",
+    href: "#herbal-extracts",
   },
   {
-    image: "https://bmgqwozegxstvizngicd.supabase.co/storage/v1/render/image/public/shop-assets/banners/1771918626429-vhf1aq.png?width=800&height=400&quality=65&format=avif&resize=contain",
-    title: "Green fodder seeds for healthier livestock",
-    sub: "Berseem, sorghum, alfalfa and millet with dependable yields.",
-    cta: "Shop fodder",
-    href: "#fodder",
+    image: BANNER, // TODO: banner 2
+    title: "Pure essential oils for aromatherapy and personal care",
+    sub: "Lavender, tea tree, eucalyptus, sandalwood and more in bulk.",
+    cta: "Shop oils",
+    href: "#essential-oils",
   },
   {
-    image: "https://bmgqwozegxstvizngicd.supabase.co/storage/v1/render/image/public/shop-assets/banners/1771917030093-66xplmk.png?width=800&height=400&quality=65&format=avif&resize=contain",
-    title: "Aromatic herbs for farm and kitchen",
-    sub: "Basil, lemongrass, chamomile and mint seeds ready to sow.",
-    cta: "Shop herbs",
-    href: "#aromatic",
+    image: BANNER, // TODO: banner 3
+    title: "Bulk herbal stocks and micronutrients",
+    sub: "Dried raw herbs, minerals and vitamins with reliable repeat supply.",
+    cta: "Shop herbal stocks",
+    href: "#herbal-stocks",
   },
 ];
 
@@ -48,22 +63,11 @@ const Check = () => (
   </svg>
 );
 
-function Photo({ p, w, h, className }: { p: Product; w: number; h: number; className?: string }) {
-  const [bad, setBad] = useState(false);
-  if (bad) return <div className={`ph ${className ?? ""}`}>{p.name}</div>;
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img className={className} src={imgUrl(p, w, h)} alt={p.name} loading="lazy" onError={() => setBad(true)} />;
-}
-
 export default function Home() {
   const [open, setOpen] = useState<{ p: Product; cat: string } | null>(null);
   const [slide, setSlide] = useState(0);
   const [hover, setHover] = useState(false);
   const [q, setQ] = useState("");
-  const [menu, setMenu] = useState(false);
-  const [mq, setMq] = useState("");
-  const [mob, setMob] = useState(false); // mobile drawer
-  const [acc, setAcc] = useState<string | null>(null); // open category in drawer
   const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
 
   useEffect(() => {
@@ -72,51 +76,29 @@ export default function Home() {
     return () => clearInterval(t);
   }, [hover]);
 
+  // Product popup: Escape closes it, page scroll is locked while it is open
   useEffect(() => {
+    if (!open) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        setOpen(null);
-        setMenu(false);
-        setMob(false);
-      }
+      if (e.key === "Escape") setOpen(null);
     };
     window.addEventListener("keydown", onKey);
-    document.body.style.overflow = open || mob ? "hidden" : "";
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, mob]);
-
-  useEffect(() => {
-    const onResize = () => {
-      if (window.innerWidth > 1060) setMob(false);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
     };
-    window.addEventListener("resize", onResize);
-    return () => window.removeEventListener("resize", onResize);
-  }, []);
+  }, [open]);
 
   const wa = (name?: string) =>
     `https://wa.me/${SITE.whatsapp}` +
-    (name ? `?text=${encodeURIComponent(`Hello Herbyzone, I'm interested in ${name}. Please share price and availability.`)}` : "");
+    (name ? `?text=${encodeURIComponent(`Hello Herbyzone Botanicals, I'm interested in ${name}. Please share price and availability.`)}` : "");
 
   const term = q.trim().toLowerCase();
   const cats = CATEGORIES.map((c) => ({
     ...c,
     products: term ? c.products.filter((p) => (p.name + " " + p.short).toLowerCase().includes(term)) : c.products,
   })).filter((c) => c.products.length);
-
-  // mega menu data
-  const total = CATEGORIES.reduce((n, c) => n + c.products.length, 0);
-  const BEST = CATEGORIES.flatMap((c) => c.products.map((p) => ({ p, cat: c.nav }))).filter((x) => x.p.best).slice(0, 6);
-  const mterm = mq.trim().toLowerCase();
-  const menuCats = CATEGORIES.map((c) => ({
-    ...c,
-    products: mterm ? c.products.filter((p) => p.name.toLowerCase().includes(mterm)) : c.products,
-  })).filter((c) => c.products.length);
-
-  const pick = (p: Product, cat: string) => {
-    setOpen({ p, cat });
-    setMenu(false);
-    setMob(false);
-  };
 
   const go = (d: number) => setSlide((s) => (s + d + SLIDES.length) % SLIDES.length);
 
@@ -130,6 +112,29 @@ export default function Home() {
         <a className="btn btn-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
     );
+
+    /* feature: photo, name, botanical name, description, feature badges */
+    if (v === "feature") {
+      // Edit these badges any time: forms come from the product data
+      const badges = [...(p.forms ?? []), "Bulk supply", "Specs on request"].slice(0, 4);
+      return (
+        <article key={p.id} className="kc kc-feature">
+          <button className="kc-media" onClick={view} aria-label={`View ${p.name}`}>
+            <Photo p={p} w={520} h={360} />
+            <span className="tag">{c.nav}</span>
+          </button>
+          <div className="kc-body">
+            <h3>{p.name}</h3>
+            {p.botanical && <em className="botanical">{p.botanical}</em>}
+            <p className="short">{p.short}</p>
+            <div className="badges">
+              {badges.map((b) => <span key={b}>{b}</span>)}
+            </div>
+            {actions}
+          </div>
+        </article>
+      );
+    }
 
     if (v === "overlay")
       return (
@@ -190,7 +195,7 @@ export default function Home() {
         </article>
       );
 
-    // classic = your original card
+    // classic
     return (
       <article key={p.id} className="card">
         <button className="card-media" onClick={view} aria-label={`View ${p.name}`}>
@@ -203,10 +208,7 @@ export default function Home() {
           <ul className="points">
             {p.points.map((pt) => <li key={pt}><Check />{pt}</li>)}
           </ul>
-          <div className="actions">
-            <button className="btn btn-outline" onClick={view}>View details</button>
-            <a className="btn btn-wa" href={wa(p.name)} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-          </div>
+          {actions}
         </div>
       </article>
     );
@@ -214,8 +216,9 @@ export default function Home() {
 
   const renderCat = (c: Cat, i: number) => {
     const v = CARD_BY_ID[c.id] ?? CARD_STYLES[i % CARD_STYLES.length];
-    const featured = c.products.slice(0, FEATURED);
-    const rest = c.products.slice(FEATURED, FEATURED + LIST_MAX);
+    const base = LAYOUT[c.id] ?? DEFAULT_LAYOUT;
+    const featured = c.products.slice(0, base.cards);
+    const rest = c.products.slice(base.cards, base.cards + base.list);
     return (
       <section key={c.id} id={c.id} className="cat">
         <div className="cat-head" style={{ background: `linear-gradient(90deg, ${c.tint}, #fff 85%)` }}>
@@ -225,13 +228,18 @@ export default function Home() {
             <p>{c.blurb}</p>
           </div>
         </div>
-        <div className={v === "classic" ? "grid" : `kgrid kgrid-${v}`}>
-          {featured.map((p) => renderCard(p, c, v))}
-        </div>
+        {featured.length > 0 && (
+          <div
+            className={`${v === "classic" ? "grid" : `kgrid kgrid-${v}`} one-line`}
+            style={{ ["--cols" as string]: featured.length }}
+          >
+            {featured.map((p) => renderCard(p, c, v))}
+          </div>
+        )}
         {rest.length > 0 && (
           <div className="plist-wrap">
             <h4 className="plist-title">More {c.title.toLowerCase()} <em>({rest.length})</em></h4>
-            <ol className="plist">
+            <ol className={`plist ${base.grid ? "plist-grid" : ""}`}>
               {rest.map((p) => (
                 <li key={p.id}>
                   <button className="pl-img" onClick={() => setOpen({ p, cat: c.nav })} aria-label={`View ${p.name}`}>
@@ -253,153 +261,7 @@ export default function Home() {
 
   return (
     <div className={`site ${display.variable} ${body.variable}`}>
-      {/* Mobile / tablet drawer (kept outside the header so position:fixed works) */}
-      {mob && (
-        <>
-          <div className="drawer-backdrop" onClick={() => setMob(false)} />
-          <aside className="drawer" aria-label="Menu">
-            <div className="drawer-head">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img src="/logo.png" alt="Herbyzone Seeds & Plants" />
-              <button className="drawer-x" onClick={() => setMob(false)} aria-label="Close menu">×</button>
-            </div>
-            <nav className="drawer-scroll">
-              <a className="d-link" href="#about" onClick={() => setMob(false)}>About</a>
-              <div className="d-label">Products</div>
-              {CATEGORIES.map((c) => (
-                <div key={c.id}>
-                  <button
-                    className={`acc-btn ${acc === c.id ? "on" : ""}`}
-                    onClick={() => setAcc((a) => (a === c.id ? null : c.id))}
-                    aria-expanded={acc === c.id}
-                  >
-                    <span className="acc-ic" style={{ background: c.tint }}>{c.icon}</span>
-                    {c.title}
-                    <em>{c.products.length}</em>
-                    <svg viewBox="0 0 12 12" width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-                  </button>
-                  {acc === c.id && (
-                    <ul className="acc-list">
-                      <li><a className="acc-all" href={`#${c.id}`} onClick={() => setMob(false)}>View all {c.nav} →</a></li>
-                      {c.products.map((p) => (
-                        <li key={p.id}>
-                          <button onClick={() => pick(p, c.nav)}>{p.name}{p.best && <i> ★</i>}</button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
-                </div>
-              ))}
-              <a className="d-link" href="#expert" onClick={() => setMob(false)}>Ask an expert</a>
-              <a className="d-link" href="#contact" onClick={() => setMob(false)}>Contact</a>
-            </nav>
-            <div className="drawer-cta">
-              <a className="btn btn-outline" href={tel}>Call now</a>
-              <a className="btn btn-wa" href={wa()} target="_blank" rel="noopener noreferrer">WhatsApp</a>
-            </div>
-          </aside>
-        </>
-      )}
-
-      <div className="topbar">
-        <div className="pad row">
-          <span>Free crop advice — call or WhatsApp our team</span>
-          <span className="tb-right">
-            <span className="hide-sm">{SITE.hours}</span>
-            <a href={`mailto:${SITE.email}`} className="hide-sm">{SITE.email}</a>
-            <a href={tel}>{SITE.phone}</a>
-          </span>
-        </div>
-      </div>
-
-      <header className="header" onMouseLeave={() => setMenu(false)}>
-        <div className="pad row">
-          <button className="burger" onClick={() => setMob(true)} aria-label="Open menu" aria-expanded={mob}>
-            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
-          </button>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <a href="#top" className="logo"><img src="/logo.png" alt="Herbyzone Seeds & Plants" /></a>
-
-          <div className="navgroup">
-            <a
-              href="#medicinal"
-              className={`prod-link ${menu ? "on" : ""}`}
-              onMouseEnter={() => setMenu(true)}
-              onClick={(e) => { e.preventDefault(); setMenu((m) => !m); }}
-              aria-expanded={menu}
-              aria-controls="mega"
-            >
-              Products
-              <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
-            </a>
-            <nav>
-              <a href="#about">About</a>
-              {CATEGORIES.map((c) => <a key={c.id} href={`#${c.id}`}>{c.nav}</a>)}
-              <a href="#contact">Contact</a>
-            </nav>
-          </div>
-
-          <label className="search">
-            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" strokeLinecap="round" /></svg>
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="Search seeds, plants, herbs..." aria-label="Search products" />
-          </label>
-          <a className="btn btn-wa sm" href={wa()} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
-        </div>
-
-        {menu && (
-          <>
-            <div className="mega-backdrop" onClick={() => setMenu(false)} />
-            <div className="mega" id="mega">
-              <div className="pad mega-in">
-                {/* LEFT ~80%: all products */}
-                <div className="mega-main">
-                  <div className="mega-top">
-                    <strong>All products <span>({total})</span></strong>
-                    <input value={mq} onChange={(e) => setMq(e.target.value)} placeholder="Filter products…" aria-label="Filter products" />
-                  </div>
-                  <div className="mega-cols">
-                    {menuCats.map((c) => (
-                      <div key={c.id} className="mega-col" style={{ ["--rows" as string]: 13 }}>
-                        <h4><span style={{ background: c.tint }}>{c.icon}</span>{c.title}<em>{c.products.length}</em></h4>
-                        <ul>
-                          {c.products.slice(0, MENU_MAX).map((p) => (
-                            <li key={p.id}>
-                              <button onClick={() => pick(p, c.nav)}>
-                                <span className="nm">{p.name}</span>
-                                {p.best && <i title="Best seller">★</i>}
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                        {c.products.length > MENU_MAX && (
-                          <a className="mega-more" href={`#${c.id}`} onClick={() => setMenu(false)}>View all {c.products.length} →</a>
-                        )}
-                      </div>
-                    ))}
-                    {!menuCats.length && <p className="mega-empty">No product matches “{mq}”.</p>}
-                  </div>
-                </div>
-
-                {/* RIGHT ~20%: best sellers */}
-                <aside className="mega-side">
-                  <h4>⭐ Best sellers</h4>
-                  <ul>
-                    {BEST.map(({ p, cat }) => (
-                      <li key={p.id}>
-                        <button onClick={() => pick(p, cat)}>
-                          <span className="bs-img"><Photo p={p} w={120} h={120} /></span>
-                          <span className="bs-txt"><b>{p.name}</b><small>{cat}</small></span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                  <a className="btn btn-primary sm" href="#medicinal" onClick={() => setMenu(false)}>Browse all products</a>
-                </aside>
-              </div>
-            </div>
-          </>
-        )}
-      </header>
+      <Header query={q} onQuery={setQ} onPick={(p, cat) => setOpen({ p, cat })} />
 
       <main id="top">
         <section className="carousel" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} aria-roledescription="carousel">
@@ -425,35 +287,36 @@ export default function Home() {
 
         <section id="about" className="about">
           <div className="pad about-grid">
-            <h2>About Herbyzone</h2>
-            <p>
-              Herbyzone supplies tested medicinal crop seeds, fodder seeds, herbs and nursery plants to farmers,
-              dairy owners and growers. We help you pick the right variety for your soil and season, and
-              support you from sowing to harvest.
-            </p>
+            <h2>About Herbyzone Botanicals</h2>
+            {/* TODO: about us details will be added here */}
+            <p>Herbyzone Botanicals supplies herbal extracts, essential oils, micronutrients and bulk herbal stocks
+              to pharmaceutical, nutraceutical, food and cosmetic manufacturers. Our extracts come in powder and
+              liquid form, and our essential oils, minerals, vitamins and dried herbs are available in bulk
+              quantities for regular supply. Share the product, grade and quantity you need, and our team will
+              reply with specifications, price and availability. We focus on dependable sourcing and clear
+              communication, so your production keeps running without delays.</p>
           </div>
         </section>
 
         <div className="pad">
           <div className="promo">
             <div>
-              <strong>Not sure what to grow?</strong>
-              <span>Tell us your land and season. Our team will suggest the right crop.</span>
+              <strong>Looking for bulk supply?</strong>
+              <span>Tell us the product and quantity. Our team will share specifications and price.</span>
             </div>
-            <a className="btn btn-primary" href={wa()} target="_blank" rel="noopener noreferrer">Ask an expert</a>
+            <a className="btn btn-primary" href={wa()} target="_blank" rel="noopener noreferrer">Request a quote</a>
           </div>
 
           {cats.map((c, i) => renderCat(c, i))}
           {!cats.length && <p className="empty">No products match “{q}”. Try another name, or <a href={wa()}>ask us on WhatsApp</a>.</p>}
         </div>
 
-        {/* Ask an expert — bottom band before the footer */}
         <section id="expert" className="expert">
           <div className="pad expert-in">
             <div className="expert-txt">
-              <span className="expert-kicker">Free crop advice</span>
-              <h2>Not sure what to grow? Ask our expert</h2>
-              <p>Tell us your land, water and season. Our team will suggest the right crop and help you from sowing to harvest.</p>
+              <span className="expert-kicker">Bulk orders</span>
+              <h2>Need a quote? Talk to our team</h2>
+              <p>Share the product, grade and quantity you need. We will reply with specifications and availability.</p>
             </div>
             <div className="expert-cta">
               <a className="btn btn-light" href={wa()} target="_blank" rel="noopener noreferrer">Ask on WhatsApp</a>
@@ -496,18 +359,7 @@ export default function Home() {
                   </>
                 )}
 
-                {open.p.guide && (
-                  <>
-                    <h5>Growing guide</h5>
-                    <table className="guide">
-                      <tbody>
-                        {open.p.guide.map(([k, v]) => <tr key={k}><th>{k}</th><td>{v}</td></tr>)}
-                      </tbody>
-                    </table>
-                  </>
-                )}
-
-                <p className="modal-note">Prices and stock vary by season. Message us for today’s rate and bulk discounts.</p>
+                <p className="modal-note">Prices and stock vary. Message us for today’s rate and bulk quantities.</p>
               </div>
               <div className="cta">
                 <a className="btn btn-call" href={tel}>Call now</a>
