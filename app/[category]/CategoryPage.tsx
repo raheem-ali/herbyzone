@@ -6,6 +6,7 @@ import { INTRO } from "@/app/data/categoryIntro";
 import { attributesFor } from "@/app/data/attributes";
 import { SITE } from "@/app/data/site";
 import Footer from "@/app/components/Footer";
+import Header from "@/app/components/Header";
 import "./category.css";
 
 function Photo({ p }: { p: Product }) {
@@ -34,20 +35,7 @@ export default function CategoryPage({ id }: { id: string }) {
 
   return (
     <div className={`cp ${display.variable} ${body.variable}`} style={{ ["--tint" as string]: c.tint }}>
-      <header className="cp-nav">
-        <div className="cp-wrap cp-nav-in">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <a href="/"><img src="/logo.png" alt="Herbyzone Botanicals" height={44} /></a>
-          <nav>
-            <a href="/#about">About</a>
-            {CATEGORIES.map((k) => (
-              <a key={k.id} href={`/${k.id}`} className={k.id === id ? "on" : ""}>{k.nav}</a>
-            ))}
-            <a href="/#contact">Contact</a>
-          </nav>
-          <a className="cp-btn cp-wa" href={wa()} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
-        </div>
-      </header>
+      <Header active={`/${id}`} />
 
       {/* Section 1: page banner + breadcrumb */}
       <section className="cp-banner">

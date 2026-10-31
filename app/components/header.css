@@ -10,3 +10,16 @@
 .tb-results small{color:#5d6b60;white-space:nowrap}
 .tb-empty{padding:12px;color:#5d6b60;font-size:14px}
 @media(max-width:700px){.tb-search{max-width:none}}
+
+/* Main navigation: Home, Products, Categories, About, Blog, Contact */
+.hnav{display:flex;align-items:center;gap:26px;margin-left:auto;margin-right:18px}
+.hnav a,.hnav .hn-dd{display:inline-flex;align-items:center;gap:6px;padding:8px 0;border:0;border-bottom:2px solid transparent;background:none;color:#1d2a20;font:inherit;font-size:15px;font-weight:500;text-decoration:none;cursor:pointer}
+.hnav a:hover,.hnav .hn-dd:hover,.hnav .open,.hnav .on{color:#1a7a32;border-bottom-color:#239940}
+.hn-dd svg{transition:transform .15s}.hn-dd.open svg{transform:rotate(180deg)}
+.dd-wrap{position:relative}
+.cat-dd{position:absolute;left:50%;top:100%;transform:translateX(-50%);z-index:70;width:290px;margin:6px 0 0;padding:8px;list-style:none;background:#fff;border:1px solid #e3e8e1;border-radius:14px;box-shadow:0 16px 36px rgba(0,0,0,.14)}
+.hnav .cat-dd a{display:flex;align-items:center;gap:12px;width:100%;padding:10px 12px;border-radius:10px;border-bottom:0;color:#1d2a20}
+.hnav .cat-dd a:hover{background:#f4f8ef;border-bottom:0}
+.cat-dd span{display:grid;place-items:center;width:34px;height:34px;border-radius:9px;font-size:17px}
+.cat-dd em{margin-left:auto;font-style:normal;color:#5d6b60;font-size:13px}
+@media(max-width:1060px){.hnav{display:none}}

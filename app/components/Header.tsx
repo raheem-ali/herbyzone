@@ -1,5 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
+import { display, body } from "@/app/fonts";
 import { CATEGORIES as ALL_CATEGORIES, type Product } from "@/app/data/botanicals";
 import { SITE } from "@/app/data/site";
 import Photo from "@/app/components/Photo";
@@ -17,10 +18,13 @@ type Props = {
   onPick?: (p: Product, categoryNav: string) => void;
   /** Optional: called as the visitor types in the search box (the home page uses it to filter its sections). */
   onQuery?: (v: string) => void;
+  /** Current page path, used to highlight the nav item: "/", "/about", "/blog", "/contact" or a category path. */
+  active?: string;
 };
 
-export default function Header({ onPick, onQuery }: Props) {
+export default function Header({ onPick, onQuery, active }: Props) {
   const [menu, setMenu] = useState(false);
+  const [catOpen, setCatOpen] = useState(false); // Categories dropdown
   const [mq, setMq] = useState("");
   const [mob, setMob] = useState(false); // mobile drawer
   const [acc, setAcc] = useState<string | null>(null); // open category in drawer
@@ -34,6 +38,7 @@ export default function Header({ onPick, onQuery }: Props) {
         setMenu(false);
         setMob(false);
         setSOpen(false);
+        setCatOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -53,6 +58,9 @@ export default function Header({ onPick, onQuery }: Props) {
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
   }, []);
+
+  const section = !active ? "" : active === "/" ? "home" : ["/about", "/blog", "/contact"].includes(active) ? active.slice(1) : "categories";
+  const closeDd = () => { setMenu(false); setCatOpen(false); };
 
   const wa = () => `https://wa.me/${SITE.whatsapp}`;
 
@@ -89,7 +97,7 @@ export default function Header({ onPick, onQuery }: Props) {
   };
 
   return (
-    <>
+    <div className={`site ${display.variable} ${body.variable}`} style={{ display: "contents" }}>
       {/* Mobile / tablet drawer */}
       {mob && (
         <>
@@ -101,7 +109,7 @@ export default function Header({ onPick, onQuery }: Props) {
               <button className="drawer-x" onClick={() => setMob(false)} aria-label="Close menu">×</button>
             </div>
             <nav className="drawer-scroll">
-              <a className="d-link" href="/about" onClick={() => setMob(false)}>About</a>
+              <a className="d-link" href="/" onClick={() => setMob(false)}>Home</a>
               <div className="d-label">Products</div>
               {CATEGORIES.map((c) => (
                 <div key={c.id}>
@@ -127,6 +135,11 @@ export default function Header({ onPick, onQuery }: Props) {
                   )}
                 </div>
               ))}
+              <div className="d-label">Categories</div>
+              {CATEGORIES.map((c) => (
+                <a key={c.id} className="d-link" href={`/${c.id}`} onClick={() => setMob(false)}>{c.title}</a>
+              ))}
+              <a className="d-link" href="/about" onClick={() => setMob(false)}>About</a>
               <a className="d-link" href="/blog" onClick={() => setMob(false)}>Blog</a>
               <a className="d-link" href="/#expert" onClick={() => setMob(false)}>Request a quote</a>
               <a className="d-link" href="/contact" onClick={() => setMob(false)}>Contact</a>
@@ -178,7 +191,7 @@ export default function Header({ onPick, onQuery }: Props) {
         </div>
       </div>
 
-      <header className="header" onMouseLeave={() => setMenu(false)}>
+      <header className="header" onMouseLeave={closeDd}>
         <div className="pad row">
           <button className="burger" onClick={() => setMob(true)} aria-label="Open menu" aria-expanded={mob}>
             <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
@@ -186,24 +199,48 @@ export default function Header({ onPick, onQuery }: Props) {
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <a href="/" className="logo"><img src="/logo.png" alt="Herbyzone Botanicals" /></a>
 
-          <div className="navgroup">
+          <nav className="hnav" aria-label="Main">
+            <a href="/" className={section === "home" ? "on" : ""} onMouseEnter={closeDd}>Home</a>
             <a
               href="/herbal-extracts"
-              className={`prod-link ${menu ? "on" : ""}`}
-              onMouseEnter={() => setMenu(true)}
-              onClick={(e) => { e.preventDefault(); setMenu((m) => !m); }}
+              className={`hn-dd ${menu ? "open" : ""}`}
+              onMouseEnter={() => { setMenu(true); setCatOpen(false); }}
+              onClick={(e) => { e.preventDefault(); setMenu((m) => !m); setCatOpen(false); }}
               aria-expanded={menu}
               aria-controls="mega"
             >
               Products
               <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
             </a>
-            <nav>
-              <a href="/about">About</a>
-              <a href="/blog">Blog</a>
-              <a href="/contact">Contact</a>
-            </nav>
-          </div>
+            <div className="dd-wrap" onMouseEnter={() => { setCatOpen(true); setMenu(false); }}>
+              <button
+                type="button"
+                className={`hn-dd ${catOpen ? "open" : ""} ${section === "categories" ? "on" : ""}`}
+                onClick={() => { setCatOpen((o) => !o); setMenu(false); }}
+                aria-expanded={catOpen}
+                aria-haspopup="true"
+              >
+                Categories
+                <svg viewBox="0 0 12 12" width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><path d="M2 4l4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
+              </button>
+              {catOpen && (
+                <ul className="cat-dd">
+                  {CATEGORIES.map((c) => (
+                    <li key={c.id}>
+                      <a href={`/${c.id}`} onClick={() => setCatOpen(false)}>
+                        <span style={{ background: c.tint }}>{c.icon}</span>
+                        {c.title}
+                        <em>{c.products.length}</em>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+            <a href="/about" className={section === "about" ? "on" : ""} onMouseEnter={closeDd}>About</a>
+            <a href="/blog" className={section === "blog" ? "on" : ""} onMouseEnter={closeDd}>Blog</a>
+            <a href="/contact" className={section === "contact" ? "on" : ""} onMouseEnter={closeDd}>Contact</a>
+          </nav>
 
           <a className="btn btn-wa sm" href={wa()} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
         </div>
@@ -258,6 +295,6 @@ export default function Header({ onPick, onQuery }: Props) {
           </>
         )}
       </header>
-    </>
+    </div>
   );
 }
