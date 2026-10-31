@@ -261,7 +261,7 @@ export default function Home() {
 
   return (
     <div className={`site ${display.variable} ${body.variable}`}>
-      <Header query={q} onQuery={setQ} onPick={(p, cat) => setOpen({ p, cat })} />
+      <Header onQuery={setQ} onPick={(p, cat) => setOpen({ p, cat })} />
 
       <main id="top">
         <section className="carousel" onMouseEnter={() => setHover(true)} onMouseLeave={() => setHover(false)} aria-roledescription="carousel">

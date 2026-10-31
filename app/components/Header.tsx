@@ -4,6 +4,7 @@ import { CATEGORIES as ALL_CATEGORIES, type Product } from "@/app/data/botanical
 import { SITE } from "@/app/data/site";
 import Photo from "@/app/components/Photo";
 import "../categories.css";
+import "./header.css";
 
 const MENU_MAX = 25; // products shown per category in the mega menu
 
@@ -14,16 +15,17 @@ export const CATEGORIES = ORDER.map((id) => ALL_CATEGORIES.find((c) => c.id === 
 type Props = {
   /** Called when a product is chosen in the menu. If missing, the visitor goes to that product's category page. */
   onPick?: (p: Product, categoryNav: string) => void;
-  /** Header search box. Shown only when both are given. */
-  query?: string;
+  /** Optional: called as the visitor types in the search box (the home page uses it to filter its sections). */
   onQuery?: (v: string) => void;
 };
 
-export default function Header({ onPick, query, onQuery }: Props) {
+export default function Header({ onPick, onQuery }: Props) {
   const [menu, setMenu] = useState(false);
   const [mq, setMq] = useState("");
   const [mob, setMob] = useState(false); // mobile drawer
   const [acc, setAcc] = useState<string | null>(null); // open category in drawer
+  const [sq, setSq] = useState(""); // top bar search text
+  const [sOpen, setSOpen] = useState(false);
   const tel = `tel:${SITE.phone.replace(/\s/g, "")}`;
 
   useEffect(() => {
@@ -31,6 +33,7 @@ export default function Header({ onPick, query, onQuery }: Props) {
       if (e.key === "Escape") {
         setMenu(false);
         setMob(false);
+        setSOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
@@ -60,6 +63,23 @@ export default function Header({ onPick, query, onQuery }: Props) {
     ...c,
     products: mterm ? c.products.filter((p) => p.name.toLowerCase().includes(mterm)) : c.products,
   })).filter((c) => c.products.length);
+
+  const sterm = sq.trim().toLowerCase();
+  const results = sterm
+    ? CATEGORIES.flatMap((c) => c.products.map((p) => ({ p, c })))
+        .filter(({ p }) => (p.name + " " + (p.botanical ?? "")).toLowerCase().includes(sterm))
+        .slice(0, 8)
+    : [];
+  const typeSearch = (v: string) => {
+    setSq(v);
+    setSOpen(true);
+    onQuery?.(v);
+  };
+  const clearSearch = () => {
+    setSq("");
+    setSOpen(false);
+    onQuery?.("");
+  };
 
   const pick = (p: Product, c: (typeof CATEGORIES)[number]) => {
     setMenu(false);
@@ -121,7 +141,35 @@ export default function Header({ onPick, query, onQuery }: Props) {
 
       <div className="topbar">
         <div className="pad row">
-          <span>Bulk supply for manufacturers — call or WhatsApp our team</span>
+          <div className="tb-search">
+            <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" strokeLinecap="round" /></svg>
+            <input
+              value={sq}
+              onChange={(e) => typeSearch(e.target.value)}
+              onFocus={() => setSOpen(true)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && results[0]) { pick(results[0].p, results[0].c); clearSearch(); }
+              }}
+              placeholder="Search extracts, oils, herbs..."
+              aria-label="Search products"
+              autoComplete="off"
+            />
+            {sOpen && sterm && (
+              <>
+                <div className="tb-back" onClick={() => setSOpen(false)} />
+                <ul className="tb-results">
+                  {results.map(({ p, c }) => (
+                    <li key={p.id}>
+                      <button onClick={() => { pick(p, c); clearSearch(); }}>
+                        <span>{p.name}</span><small>{c.nav}</small>
+                      </button>
+                    </li>
+                  ))}
+                  {!results.length && <li className="tb-empty">No product matches “{sq}”.</li>}
+                </ul>
+              </>
+            )}
+          </div>
           <span className="tb-right">
             <span className="hide-sm">{SITE.hours}</span>
             <a href={`mailto:${SITE.email}`} className="hide-sm">{SITE.email}</a>
@@ -152,18 +200,11 @@ export default function Header({ onPick, query, onQuery }: Props) {
             </a>
             <nav>
               <a href="/about">About</a>
-              {CATEGORIES.map((c) => <a key={c.id} href={`/${c.id}`}>{c.nav}</a>)}
               <a href="/blog">Blog</a>
               <a href="/contact">Contact</a>
             </nav>
           </div>
 
-          {onQuery && (
-            <label className="search">
-              <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="9" cy="9" r="6" /><path d="M14 14l4 4" strokeLinecap="round" /></svg>
-              <input value={query ?? ""} onChange={(e) => onQuery(e.target.value)} placeholder="Search extracts, oils, herbs..." aria-label="Search products" />
-            </label>
-          )}
           <a className="btn btn-wa sm" href={wa()} target="_blank" rel="noopener noreferrer">WhatsApp us</a>
         </div>
 
