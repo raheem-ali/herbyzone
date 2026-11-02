@@ -6,27 +6,27 @@
     --line: #e3e8e1;
     font-family: var(--font-body, system-ui), system-ui, sans-serif;
     color: var(--ink);
-    background: #fff
+    background: #fff;
 }
 
 .cp * {
-    box-sizing: border-box
+    box-sizing: border-box;
 }
 
 :where(.cp) a {
     color: inherit;
-    text-decoration: none
+    text-decoration: none;
 }
 
 .cp-wrap {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 0 20px
+    padding: 0 20px;
 }
 
 .cp :focus-visible {
     outline: 2px solid var(--g);
-    outline-offset: 2px
+    outline-offset: 2px;
 }
 
 .cp-btn {
@@ -38,32 +38,32 @@
     font-weight: 600;
     font-size: 14px;
     border: 1.5px solid transparent;
-    cursor: pointer
+    cursor: pointer;
 }
 
 .cp-primary {
     background: var(--g);
-    color: #fff
+    color: #fff;
 }
 
 .cp-primary:hover {
-    background: var(--gd)
+    background: var(--gd);
 }
 
 .cp-wa {
     background: #25d366;
-    color: #fff
+    color: #fff;
 }
 
 .cp-line {
     border-color: var(--g);
     color: var(--gd);
-    background: #fff
+    background: #fff;
 }
 
 .cp-light {
     background: #fff;
-    color: var(--gd)
+    color: var(--gd);
 }
 
 .cp-nav {
@@ -71,20 +71,20 @@
     top: 0;
     z-index: 20;
     background: #fff;
-    border-bottom: 1px solid var(--line)
+    border-bottom: 1px solid var(--line);
 }
 
 .cp-nav-in {
     display: flex;
     align-items: center;
     gap: 24px;
-    height: 68px
+    height: 68px;
 }
 
 .cp-nav img {
     height: 44px;
     width: auto;
-    display: block
+    display: block;
 }
 
 .cp-nav nav {
@@ -92,18 +92,18 @@
     gap: 22px;
     margin-left: auto;
     font-weight: 500;
-    font-size: 15px
+    font-size: 15px;
 }
 
 .cp-nav nav a {
     padding: 6px 0;
-    border-bottom: 2px solid transparent
+    border-bottom: 2px solid transparent;
 }
 
 .cp-nav nav a.on,
 .cp-nav nav a:hover {
     border-color: var(--g);
-    color: var(--gd)
+    color: var(--gd);
 }
 
 /* Section 1: banner + breadcrumb */
@@ -114,46 +114,46 @@
     text-align: center;
     padding: 0 20px;
     color: #fff;
-    background: linear-gradient(rgba(20, 70, 32, .82), rgba(20, 70, 32, .82)), var(--tint)
+    background: linear-gradient(rgba(20, 70, 32, .82), rgba(20, 70, 32, .82)), var(--tint);
 }
 
 .cp-banner h2 {
     margin: 0;
     font-family: var(--font-display, Georgia), Georgia, serif;
     font-size: clamp(22px, 3vw, 32px);
-    font-weight: 600
+    font-weight: 600;
 }
 
 .cp-crumbbar {
     border-bottom: 1px solid var(--line);
-    background: #fff
+    background: #fff;
 }
 
 .cp-crumb {
     padding-top: 12px;
     padding-bottom: 12px;
     font-size: 13px;
-    color: var(--mut)
+    color: var(--mut);
 }
 
 .cp-crumb i {
     font-style: normal;
     margin: 0 6px;
-    color: #b8c2b9
+    color: #b8c2b9;
 }
 
 .cp-crumb b {
     color: var(--g);
-    font-weight: 600
+    font-weight: 600;
 }
 
 .cp-crumb a:hover {
-    color: var(--gd)
+    color: var(--gd);
 }
 
 /* Section 2: intro */
 .cp-intro {
-    padding: 34px 0 40px
+    padding: 34px 0 40px;
 }
 
 .cp-intro h1 {
@@ -162,7 +162,7 @@
     font-family: var(--font-display, Georgia), Georgia, serif;
     font-size: clamp(26px, 3.2vw, 36px);
     color: var(--gd);
-    font-weight: 600
+    font-weight: 600;
 }
 
 .cp-intro h1::after {
@@ -172,14 +172,14 @@
     height: 3px;
     background: var(--g);
     border-radius: 2px;
-    margin: 10px auto 0
+    margin: 10px auto 0;
 }
 
 .cp-intro-grid {
     display: grid;
     grid-template-columns: 1.05fr .95fr;
     gap: 36px;
-    align-items: start
+    align-items: start;
 }
 
 .cp-scroll {
@@ -190,49 +190,49 @@
     line-height: 1.65;
     color: #33443a;
     scrollbar-width: thin;
-    scrollbar-color: var(--g) var(--tint)
+    scrollbar-color: var(--g) var(--tint);
 }
 
 .cp-scroll::-webkit-scrollbar {
-    width: 10px
+    width: 10px;
 }
 
 .cp-scroll::-webkit-scrollbar-track {
     background: var(--tint);
-    border-radius: 8px
+    border-radius: 8px;
 }
 
 .cp-scroll::-webkit-scrollbar-thumb {
     background: var(--g);
-    border-radius: 8px
+    border-radius: 8px;
 }
 
 .cp-scroll h3 {
     margin: 0 0 8px;
     font-size: 17px;
     color: var(--ink);
-    font-family: var(--font-display, Georgia), Georgia, serif
+    font-family: var(--font-display, Georgia), Georgia, serif;
 }
 
 .cp-scroll h3:not(:first-child) {
     margin-top: 18px;
-    color: var(--gd)
+    color: var(--gd);
 }
 
 .cp-scroll p {
-    margin: 0 0 10px
+    margin: 0 0 10px;
 }
 
 .cp-scroll ul {
     margin: 0 0 6px;
     padding: 0;
-    list-style: none
+    list-style: none;
 }
 
 .cp-scroll li {
     position: relative;
     padding-left: 20px;
-    margin-bottom: 6px
+    margin-bottom: 6px;
 }
 
 .cp-scroll li::before {
@@ -243,18 +243,18 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--g)
+    background: var(--g);
 }
 
 .cp-scroll b {
-    color: var(--ink)
+    color: var(--ink);
 }
 
 .cp-thumbs {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 14px;
-    margin-top: 22px
+    margin-top: 22px;
 }
 
 .cp-thumbs>* {
@@ -263,12 +263,12 @@
     object-fit: cover;
     border-radius: 12px;
     background: var(--tint);
-    display: block
+    display: block;
 }
 
 .cp-cover {
     position: relative;
-    height: 340px
+    height: 340px;
 }
 
 .cp-cover img {
@@ -277,7 +277,7 @@
     object-fit: cover;
     border-radius: 14px;
     display: block;
-    background: var(--tint)
+    background: var(--tint);
 }
 
 .cp-pill {
@@ -288,7 +288,7 @@
     border-radius: 99px;
     padding: 11px 26px;
     box-shadow: 0 6px 16px rgba(35, 153, 64, .3);
-    border: 3px solid #fff
+    border: 3px solid #fff;
 }
 
 .cp-ph {
@@ -301,13 +301,13 @@
     font-size: 13px;
     border-radius: inherit;
     width: 100%;
-    height: 100%
+    height: 100%;
 }
 
 /* Products: wider than the rest of the page */
 .cp-main {
     max-width: 1640px;
-    padding: 36px 32px 20px
+    padding: 36px 32px 20px;
 }
 
 .cp-bar {
@@ -316,19 +316,19 @@
     align-items: center;
     gap: 16px;
     flex-wrap: wrap;
-    margin-bottom: 22px
+    margin-bottom: 22px;
 }
 
 .cp-bar h2 {
     font-family: var(--font-display, Georgia), Georgia, serif;
     font-size: 28px;
-    margin: 0
+    margin: 0;
 }
 
 .cp-bar em {
     font-style: normal;
     color: var(--mut);
-    font-size: 20px
+    font-size: 20px;
 }
 
 .cp-bar input {
@@ -336,13 +336,13 @@
     padding: 10px 14px;
     border: 1.5px solid var(--line);
     border-radius: 8px;
-    font: inherit
+    font: inherit;
 }
 
 .cp-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 24px
+    gap: 24px;
 }
 
 .cp-card {
@@ -351,13 +351,13 @@
     border: 1px solid var(--line);
     border-radius: 14px;
     overflow: hidden;
-    background: #fff
+    background: #fff;
 }
 
 .cp-img {
     position: relative;
     background: var(--tint);
-    min-height: 100%
+    min-height: 100%;
 }
 
 .cp-img img {
@@ -366,12 +366,12 @@
     object-fit: cover;
     display: block;
     position: absolute;
-    inset: 0
+    inset: 0;
 }
 
 .cp-img .cp-ph {
     position: absolute;
-    inset: 0
+    inset: 0;
 }
 
 .cp-best {
@@ -383,24 +383,25 @@
     font-size: 12px;
     font-weight: 600;
     padding: 3px 9px;
-    border-radius: 99px
+    border-radius: 99px;
+    z-index: 2;
 }
 
 .cp-info {
-    padding: 20px 24px
+    padding: 20px 24px;
 }
 
 .cp-info h3 {
     margin: 0 0 4px;
     font-size: 20px;
-    font-family: var(--font-display, Georgia), Georgia, serif
+    font-family: var(--font-display, Georgia), Georgia, serif;
 }
 
 .cp-short {
     margin: 0 0 12px;
     font-size: 14px;
     color: var(--mut);
-    line-height: 1.5
+    line-height: 1.5;
 }
 
 .cp-attr {
@@ -408,7 +409,7 @@
     border-collapse: collapse;
     font-size: 14px;
     margin-bottom: 16px;
-    border: 1px solid var(--line)
+    border: 1px solid var(--line);
 }
 
 .cp-attr th,
@@ -417,86 +418,86 @@
     padding: 9px 14px;
     border: 1px solid var(--line);
     vertical-align: top;
-    line-height: 1.4
+    line-height: 1.4;
 }
 
 .cp-attr thead th {
     background: var(--tint);
     color: var(--ink);
-    font-weight: 700
+    font-weight: 700;
 }
 
 .cp-attr tbody th {
     width: 36%;
     font-weight: 500;
     color: var(--gd);
-    background: #fff
+    background: #fff;
 }
 
 .cp-attr td {
-    color: var(--ink)
+    color: var(--ink);
 }
 
 .cp-act {
     display: flex;
     gap: 10px;
-    flex-wrap: wrap
+    flex-wrap: wrap;
 }
 
 .cp-act .cp-btn {
-    padding: 8px 14px
+    padding: 8px 14px;
 }
 
 .cp-empty {
     padding: 40px 0;
     text-align: center;
-    color: var(--mut)
+    color: var(--mut);
 }
 
 .cp-empty a {
     color: var(--gd);
-    text-decoration: underline
+    text-decoration: underline;
 }
 
 .cp-more {
-    margin-top: 56px
+    margin-top: 56px;
 }
 
 .cp-more h2 {
     font-family: var(--font-display, Georgia), Georgia, serif;
     font-size: 24px;
-    margin: 0 0 16px
+    margin: 0 0 16px;
 }
 
 .cp-more div {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    gap: 14px
+    gap: 14px;
 }
 
 .cp-more a {
     display: grid;
     gap: 2px;
     padding: 18px;
-    border-radius: 12px
+    border-radius: 12px;
 }
 
 .cp-more a:hover {
-    outline: 2px solid var(--g)
+    outline: 2px solid var(--g);
 }
 
 .cp-more span {
-    font-size: 26px
+    font-size: 26px;
 }
 
 .cp-more small {
-    color: var(--mut)
+    color: var(--mut);
 }
 
 .cp-cta {
     background: var(--gd);
     color: #fff;
-    margin-top: 32px
+    margin-top: 32px;
 }
 
 .cp-cta-in {
@@ -506,49 +507,78 @@
     gap: 20px;
     flex-wrap: wrap;
     padding-top: 36px;
-    padding-bottom: 36px
+    padding-bottom: 36px;
 }
 
 .cp-cta h2 {
     margin: 0 0 6px;
     font-family: var(--font-display, Georgia), Georgia, serif;
-    font-size: 28px
+    font-size: 28px;
 }
 
 .cp-cta p {
     margin: 0;
-    opacity: .9
+    opacity: .9;
 }
 
 @media(max-width:1060px) {
     .cp-grid {
-        grid-template-columns: 1fr
+        grid-template-columns: 1fr;
     }
 
     .cp-nav nav {
-        display: none
+        display: none;
     }
 
     .cp-nav .cp-btn {
-        margin-left: auto
+        margin-left: auto;
     }
 }
 
 @media(max-width:860px) {
+    /* 1. Intro Section: Stack columns and put the image (cp-cover) at the top */
     .cp-intro-grid {
-        grid-template-columns: 1fr
+        display: flex;
+        flex-direction: column-reverse;
+    }
+
+    .cp-cover {
+        width: 100%;
+        height: 280px;
+        margin-bottom: 35px;
+    }
+
+    /* 2. Product Cards: Stack columns so the image container is on top of info */
+    .cp-card {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cp-img {
+        width: 100%;
+        height: 240px;
+        min-height: auto;
+    }
+
+    .cp-img img {
+        position: relative;
+        height: 100%;
     }
 
     .cp-main {
-        padding: 36px 20px 20px
+        padding: 36px 20px 20px;
     }
 
     .cp-bar {
         flex-direction: column;
-        align-items: start
+        align-items: start;
     }
 
     .cp-bar input {
-        width: 100%
+        width: 100%;
+    }
+
+    .cp-more div {
+        grid-template-columns: 1fr;
     }
 }

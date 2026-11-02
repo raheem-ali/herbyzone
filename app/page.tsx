@@ -31,7 +31,8 @@ const CARD_BY_ID: Record<string, CardStyle> = {
 };
 
 // TODO: replace with Botanicals banner images
-const BANNER = "https://bmgqwozegxstvizngicd.supabase.co/storage/v1/render/image/public/shop-assets/banners/1771917030093-66xplmk.png?width=800&height=400&quality=65&format=avif&resize=contain";
+const BANNER = "categories/banner1.jpg";
+const BANNER2 = "categories/banner2.jpg";
 const SLIDES = [
   {
     image: BANNER, // TODO: banner 1
@@ -41,19 +42,12 @@ const SLIDES = [
     href: "#herbal-extracts",
   },
   {
-    image: BANNER, // TODO: banner 2
+    image: BANNER2, // TODO: banner 2
     title: "Pure essential oils for aromatherapy and personal care",
     sub: "Lavender, tea tree, eucalyptus, sandalwood and more in bulk.",
     cta: "Shop oils",
     href: "#essential-oils",
-  },
-  {
-    image: BANNER, // TODO: banner 3
-    title: "Bulk herbal stocks and micronutrients",
-    sub: "Dried raw herbs, minerals and vitamins with reliable repeat supply.",
-    cta: "Shop herbal stocks",
-    href: "#herbal-stocks",
-  },
+  }
 ];
 
 const Check = () => (

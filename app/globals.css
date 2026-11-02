@@ -849,7 +849,7 @@ h3 {
 
 /* ===== Footer ===== */
 .footer {
-  margin-top: 56px;
+  /* margin-top: 56px; */
   background: var(--forest);
   color: #b4cdb9;
   font-size: 14px

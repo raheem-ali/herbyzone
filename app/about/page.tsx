@@ -36,7 +36,7 @@ export default function About() {
             <p className="sp-p">We focus on dependable sourcing and plain communication, so your production keeps running without delays.</p>
             <div className="sp-row"><a className="sp-btn sp-primary" href="/contact">Request a quote</a><a className="sp-btn sp-line" href="/herbal-extracts">Browse products</a></div>
           </div>
-          <div className="sp-media"><Thumb src="/about/about.jpg" alt="Herbyzone Botanicals" icon="🌿" /></div>
+          <div className="sp-media"><Thumb src="/categories/about.jpg" alt="Herbyzone Botanicals" icon="🌿" /></div>
         </div>
       </section>
 

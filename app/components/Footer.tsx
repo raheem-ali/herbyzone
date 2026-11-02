@@ -9,7 +9,7 @@ export default function Footer() {
   const total = CATEGORIES.reduce((n, c) => n + c.products.length, 0);
 
   return (
-    <footer className="footer" id="contact">
+    <footer className="footer mt-0" id="contact">
       <div className="pad f-main" style={{ "--n": CATEGORIES.length } as CSSProperties}>
         <div className="f-brand">
           <a href="/" className="f-name">{SITE.name}</a>
